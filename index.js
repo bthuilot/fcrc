@@ -45,7 +45,7 @@ class FCRCServer {
       })
     });
 
-    setTimeout(sendEvent, random.int(2,8));
+    setTimeout(sendEvent, getRandomTime());
   }
 }
 
