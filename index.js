@@ -40,6 +40,7 @@ class FCRCServer {
           this.responded_users = [];
         } else {
           this.responded_users.push(socket);
+          socket.send('safe');
         }
 
       })
