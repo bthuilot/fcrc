@@ -1,5 +1,6 @@
 var app = require('express')();
 var http = require('http').createServer(app);
+const random = require('random')
 
 var io = require('socket.io')(http);
 
@@ -16,23 +17,46 @@ function remove(array, value) {
 
 
 class FCRCServer {
+
+
   constructor() {
     this.users = []
-
+    this.responded_users = []
+    
     io.on('connection', (socket) => {
+
       console.log('User connected')
       this.users.push(socket);
+
       socket.on('disconnect', () => {
         remove(this.users, socket);
         console.log('User disconnected');
-        console.log(this.users.length);
       });
+
+      socket.on('close', () => {
+
+        if (this.responded_users.length == this.users.length - 1) { 
+          socket.send('drink');
+          this.responded_users = [];
+        } else {
+          this.responded_users.push(socket);
+        }
+
+      })
     });
 
-    io.emit('some event', { for: 'everyone' });
-
+    while(true) {
+      setTimeout(this.sendEvent, this.getRandomTime())
+    }
   }
 
+  sendEvent() {
+    io.emit('popup', { for: 'everyone' });
+  }
+  
+  getRandomTime(){
+    return (60000) * random.int(min = 2, max = 8);
+  }
 
 }
 
