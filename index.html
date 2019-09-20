@@ -24,10 +24,21 @@
     #close-form {
       display: flex;
       justify-content: center;
+      display: none;
     }
 
     #close-button {
       font-size: 24px;
+    }
+
+    #safe {
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    #you-suck {
+      font-size: 24px;
+      font-weight: 600;
     }
   </style>
 </head>
@@ -39,6 +50,12 @@
   <form action="" id="close-form">
     <input type="submit" value="CLOSE" id="close-button"></input>
   </form>
+  <p id="you-suck">
+    You suck at this game. Drink. Bitch.
+  </p>
+  <p id="safe">
+    You're safe... for now.
+  </p>
 </body>
 <script>
   var socket = io();
@@ -46,12 +63,29 @@
 <script>
   $(function () {
     var socket = io();
-    $('form').submit(function (e) {
+    $('#close-form').hide();
+    $('#you-suck').hide();
+    $('#close-form').submit(function (e) {
       e.preventDefault(); // prevents page reloading
       console.log('emitting close action')
       socket.emit('close');
       return false;
     });
+    socket.on('popup', () => {
+      $('#safe').hide();
+      $('#you-suck').hide();
+      $('#close-form').show();
+    });
+    socket.on('drink', () => {
+      $('#safe').hide();
+      $('#close-form').hide();
+      $('#you-suck').show();
+    });
+    socket.on('safe', () => {
+      $('#close-form').hide();
+      $('#you-suck').hide();
+      $('#safe').show();
+    })
   });
 </script>
 
