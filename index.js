@@ -45,25 +45,30 @@ class FCRCServer {
       })
     });
 
-    while(true) {
-      setTimeout(this.sendEvent, this.getRandomTime())
-    }
+    setTimeout(sendEvent, random.int(2,8));
   }
-
-  sendEvent() {
-    io.emit('popup', { for: 'everyone' });
-  }
-  
-  getRandomTime(){
-    return (60000) * random.int(min = 2, max = 8);
-  }
-
 }
 
-penis = new FCRCServer();
 
-    http.listen(3000, function(){
+function sendEvent() {
+  io.emit('popup', { for: 'everyone' });
+  console.log('window sent')
+  setTimeout(sendEvent, getRandomTime());
+}
+  
+function getRandomTime(){
+  return (60000) * random.int(2,8);
+}
+
+
+
+http.listen(3000, function(){
       console.log('listening on *:3000');
     });
+
+
+
+
+penis = new FCRCServer();
 
 
